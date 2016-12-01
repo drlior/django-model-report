@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-import cStringIO as StringIO
-from cgi import escape
-from xhtml2pdf import pisa
+from html import escape
+#from xhtml2pdf import pisa
+from six import StringIO
 
 from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpResponse
+from xhtml2pdf import pisa
 
 from .base import Exporter
 
@@ -26,7 +27,7 @@ class PdfExporter(Exporter):
         template = get_template('model_report/export_pdf.html')
         context = Context(context_dict)
         html = template.render(context)
-        result = StringIO.StringIO()
+        result = StringIO()
         pdf_encoding='UTF-8'
 
         pdf = pisa.CreatePDF(StringIO.StringIO(html.encode(pdf_encoding)), result, encoding=pdf_encoding)

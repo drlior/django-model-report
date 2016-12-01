@@ -25,10 +25,10 @@ class ResolutionByYear(models.Model):
         verbose_name_plural = _('Resolutions by year')
 
     def date_text(self):
-        return u'%s - %s' % (self.date.strftime('%B %Y'), self.get_resolution_display())
+        return '%s - %s' % (self.date.strftime('%B %Y'), self.get_resolution_display())
 
     def __unicode__(self):
-        return u'%s - %s: %s' % (self.date.strftime('%B %Y'), self.get_resolution_display(), self.percentage)
+        return '%s - %s: %s' % (self.date.strftime('%B %Y'), self.get_resolution_display(), self.percentage)
 
 
 class Population(models.Model):
@@ -44,7 +44,7 @@ class Population(models.Model):
         verbose_name_plural = _('Populations')
 
     def __unicode__(self):
-        return u'With %s: %s' % (self.get_age_display().lower(), self.total())
+        return 'With %s: %s' % (self.get_age_display().lower(), self.total())
 
 
 class Company(models.Model):

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.utils.encoding import force_unicode
+import html
+
 from django.utils.translation import ugettext_lazy as _
+from past.builtins import unicode
+
 from model_report.highcharts.base import true, false, null, DictObject
 from model_report.highcharts.options import get_highchart_data
 
@@ -17,7 +20,6 @@ try:
 except ImportError:
     from bs4 import BeautifulStoneSoup
 
-import cgi
 
 
 def HTMLEntitiesToUnicode(text):
@@ -33,8 +35,8 @@ def unicodeToHTMLEntities(text):
     Converts unicode to HTML entities.  For example '&' becomes '&amp;'.
     """
     if text is None:
-        text = force_unicode(_('None'))
-    text = cgi.escape(text).encode('ascii', 'xmlcharrefreplace')
+        text = _('None')
+    text = html.escape(text).encode('ascii', 'xmlcharrefreplace')
     return text
 
 

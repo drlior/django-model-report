@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext_lazy
-from django.utils.encoding import force_unicode
-
+from past.builtins import unicode
 
 true = 'true'
 false = 'false'
@@ -10,8 +9,7 @@ undefined = 'undefined'
 Solid = 'Solid'
 outside = 'outside'
 
-
-_ = lambda s: force_unicode(ugettext_lazy(s))
+_ = lambda s: ugettext_lazy(s)
 
 
 class CollectionObject(object):
@@ -48,7 +46,7 @@ class DictObject:
             if v != 'null':
                 if isinstance(v, (type(ugettext_lazy(' ')))):
                     v = _(v)
-                if isinstance(v, (bool)):
+                if isinstance(v, bool):
                     v = str(v).lower()
                 if v == ('null',):
                     v = 'null'

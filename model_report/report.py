@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import copy
+
+from past.builtins import unicode
 from xlwt import Workbook, easyxf
 from itertools import groupby
 
@@ -9,14 +11,11 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.fields import DateTimeField, DateField
-from django.utils.encoding import force_unicode
 from django.db.models import Q
 from django import forms
 from django.forms.models import fields_for_model
-try:
-    from django.db.models.fields.related import ForeignObjectRel
-except ImportError:  # Django < 1.8
-    from django.db.models.related import RelatedObject as ForeignObjectRel
+from django.db.models.fields.related import ForeignObjectRel
+
 from django.db.models import ForeignKey
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -51,21 +50,24 @@ def autodiscover(module_name='reports.py'):
     for app in settings.INSTALLED_APPS:
         mod = import_module(app)
         # Attempt to import the app's admin module.
-        try:
-            before_import_registry = copy.copy(reports)
-            import_module('%s.%s' % (app, module_name))
-        except:
-            # Reset the model registry to the state before the last import as
-            # this import will have to reoccur on the next request and this
-            # could raise NotRegistered and AlreadyRegistered exceptions
-            # (see #8245).
-            reports = before_import_registry
 
-            # Decide whether to bubble up this error. If the app just
-            # doesn't have an admin module, we can ignore the error
-            # attempting to import it, otherwise we want it to bubble up.
-            if module_has_submodule(mod, module_name):
-                raise
+#        try:
+#            before_import_registry = copy.copy(reports)
+#            import_module('%s.%s' % (app, module_name))
+#        except:
+#            #lior ass
+#            pass
+#            # Reset the model registry to the state before the last import as
+#            # this import will have to reoccur on the next request and this
+#            # could raise NotRegistered and AlreadyRegistered exceptions
+#            # (see #8245).
+#            reports = before_import_registry
+#
+#            # Decide whether to bubble up this error. If the app just
+#            # doesn't have an admin module, we can ignore the error
+#            # attempting to import it, otherwise we want it to bubble up.
+#            if module_has_submodule(mod, module_name):
+#                raise
 
 
 class ReportClassManager(object):
@@ -284,7 +286,7 @@ class ReportAdmin(object):
                         if pattname in cattname:
                             if pfield.model == cfield.model:
                                 self.related_inline_filters.append([pattname, cattname, self.parent_report.get_fields().index(pattname)])
-                    except Exception, e:
+                    except Exception as e:
                         pass
 
 
@@ -294,11 +296,11 @@ class ReportAdmin(object):
         except:
             model_field = None
         value = self.get_grouper_text(value, groupby_field, model_field)
-        if value is None or unicode(value) == u'None':
+        if value is None or unicode(value) == "None":
             if groupby_field is None or unicode(groupby_field) == u'None':
-                value = force_unicode(_('Results'))
+                value = _('Results')
             else:
-                value = force_unicode(_('Nothing'))
+                value = _('Nothing')
         return value
 
     def _get_value_text(self, index, value):
@@ -308,7 +310,7 @@ class ReportAdmin(object):
             model_field = None
 
         value = self.get_value_text(value, index, model_field)
-        if value is None or unicode(value) == u'None':
+        if value is None or unicode(value) == 'None':
             value = ''
         if value == [None]:
             value = []
@@ -338,7 +340,9 @@ class ReportAdmin(object):
             pass
         return value
 
-    def get_empty_row_asdict(self, collection, default_value=[]):
+    def get_empty_row_asdict(self, collection, default_value=None):
+        if default_value is None:
+            default_value = []
         erow = {}
         for field in collection:
             erow[field] = copy.copy(default_value)
@@ -350,10 +354,12 @@ class ReportAdmin(object):
     def get_fields(self):
         return [x for x in self.fields if not x in self.related_fields]
 
-    def get_column_names(self, ignore_columns={}):
+    def get_column_names(self, ignore_columns=None):
         """
         Return the list of columns
         """
+        if ignore_columns is None:
+            ignore_columns = {}
         values = []
         for field, field_name in self.model_fields:
             if field_name in ignore_columns:
@@ -414,10 +420,12 @@ class ReportAdmin(object):
             if not self.model:
                 title = _('Unnamed report')
             else:
-                title = force_unicode(self.model._meta.verbose_name_plural).lower().capitalize()
+                title = self.model._meta.verbose_name_plural.lower().capitalize()
         return title
 
-    def get_render_context(self, request, extra_context={}, by_row=None):
+    def get_render_context(self, request, extra_context=None, by_row=None):
+        if extra_context is None:
+            extra_context = {}
         context_request = request or self.request
         filter_related_fields = {}
         if self.parent_report and by_row:
@@ -552,7 +560,7 @@ class ReportAdmin(object):
 
     def check_for_widget(self, widget, field):
         if widget:
-            for field_to_set_widget, widget in widget.iteritems():
+            for field_to_set_widget, widget in widget():
                 if field_to_set_widget == field:
                     return (True, widget, MultipleChoiceField().__class__)
 
@@ -599,14 +607,14 @@ class ReportAdmin(object):
                                 field.label_from_instance = self.get_user_label
 
                             if self.list_filter_queryset:
-                                for query_field, query in self.list_filter_queryset.iteritems():
+                                for query_field, query in self.list_filter_queryset:
                                     if query_field == k:
-                                        for variable, value in query.iteritems():
+                                        for variable, value in query():
                                             field.queryset = field.queryset.filter(**{variable: value})
 
                         else:
                             field = model_field.formfield()
-                            if self.list_filter_widget.has_key(k):
+                            if k in self.list_filter_widget.keys:
                                 use_widget, widget, field_class = self.check_for_widget(self.list_filter_widget, k)
                                 if use_widget:
                                     field.__class__ = field_class
@@ -615,7 +623,7 @@ class ReportAdmin(object):
                                     field.choices.insert(0, ('', '---------'))
                                     field.initial = ''
 
-                        field.label = force_unicode(_(field.label))
+                        field.label = _(field.label)
 
                 else:
                     if isinstance(v, (forms.BooleanField)):
@@ -744,7 +752,7 @@ class ReportAdmin(object):
         header_row = self.get_empty_row_asdict(self.get_fields(), ReportValue(''))
         for report_total_field, fun in row_config.items():
             if hasattr(fun, 'caption'):
-                value = force_unicode(fun.caption)
+                value = fun.caption
             else:
                 value = '&nbsp;'
             header_row[report_total_field] = value
@@ -771,7 +779,11 @@ class ReportAdmin(object):
             attr = attr()
         return attr
 
-    def get_rows(self, groupby_data=None, filter_kwargs={}, filter_related_fields={}):
+    def get_rows(self, groupby_data=None, filter_kwargs=None, filter_related_fields=None):
+        if filter_kwargs is None:
+            filter_kwargs = {}
+        if filter_related_fields is None:
+            filter_related_fields = {}
         report_rows = []
 
         for selected_field, field_value in filter_kwargs.items():

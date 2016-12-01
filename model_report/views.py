@@ -13,8 +13,10 @@ def report_list(request):
     context = {
         'report_list': reports.get_reports()
     }
-    return render_to_response('model_report/report_list.html', context,
-                              context_instance=RequestContext(request))
+    #return render_to_response('model_report/report_list.html', context,
+    #                          context_instance=RequestContext(request))
+    return render_to_response('model_report/report_list.html', context)
+
 
 
 def report(request, slug):

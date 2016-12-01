@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext_lazy as _
-from app.models import OS, Population, Browser, BrowserDownload, ResolutionByYear
+from .models import OS, Population, Browser, BrowserDownload, ResolutionByYear
 
 from model_report.report import reports, ReportAdmin
 from model_report.utils import (usd_format, avg_column, sum_column, count_column)
@@ -43,11 +43,11 @@ reports.register('os-report', OSReport)
 
 
 def men_format(value, instance):
-    return _(u'M %s' % value)
+    return _('M %s' % value)
 
 
 def women_format(value, instance):
-    return _(u'F %s' % value)
+    return _('F %s' % value)
 
 
 def men_label(report, field):

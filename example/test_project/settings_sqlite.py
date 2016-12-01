@@ -1,4 +1,4 @@
-from settings import *
+from example.test_project.settings import PROJECT_ABSOLUTE_DIR
 
 DATABASES = {
      'default': {

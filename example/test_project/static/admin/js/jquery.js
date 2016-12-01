@@ -2005,7 +2005,7 @@ jQuery.event = {
 		// Add which for click: 1 === left; 2 === middle; 3 === right
 		// Note: button is not normalized, so don't use it
 		if ( !event.which && event.button !== undefined ) {
-			event.which = (event.button & 1 ? 1 : ( event.button & 2 ? 3 : ( event.button & 4 ? 2 : 0 ) ));
+			event.which = (event.button && 1 ? 1 : ( event.button && 2 ? 3 : ( event.button && 4 ? 2 : 0 ) ));
 		}
 
 		return event;
@@ -3372,7 +3372,7 @@ if ( document.documentElement.compareDocumentPosition ) {
 			return a.compareDocumentPosition ? -1 : 1;
 		}
 
-		var ret = a.compareDocumentPosition(b) & 4 ? -1 : a === b ? 0 : 1;
+		var ret = a.compareDocumentPosition(b) && 4 ? -1 : a === b ? 0 : 1;
 		if ( ret === 0 ) {
 			hasDuplicate = true;
 		}

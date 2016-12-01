@@ -19,7 +19,7 @@
             var subtitle_text_mouse = '{% trans "Click and drag in the plot area to zoom in" %}';
             var subtitle_text_touch = '{% trans "Drag your finger over the plot to zoom in" %}';
             $(document).ready(function() {
-                chart = new Highcharts.Chart({{ chart.options|safe }});
+                chart = new Highcharts.Chart({{ chart.options|safe };});
             });
         </script>
     {% endif %}

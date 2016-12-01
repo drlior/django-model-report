@@ -71,9 +71,9 @@ def get_highchart_data():
         'y': 30
     }
 
-    #Solid = 'Solid'
-    #outside = 'outside'
-    #undefined = 'undefined'
+    # Solid = 'Solid'
+    # outside = 'outside'
+    # undefined = 'undefined'
 
     xAxisData = {
         'allowDecimals': true,
@@ -324,14 +324,14 @@ def get_highchart_data():
         'color': null,
         'crop': true,
         'enabled': false,
-        #'formatter':,
+        # 'formatter':,
         'overflow': undefined,
         'padding': 2,
         'rotation': 0,
         'shadow': false,
-        #'staggerLines':,
-        #'step':,
-        #'style':,
+        # 'staggerLines':,
+        # 'step':,
+        # 'style':,
         'useHTML': false,
         # 'verticalAlign':,
         'x': 0,
@@ -423,8 +423,10 @@ def get_highchart_data():
         'downloadSVG': _("Download SVG vector image"),
         'exportButtonTitle': _("Export to raster or vector image"),
         'loading': _('Loading...'),
-        'months': [_('January'), _('February'), _('March'), _('April'), _('May'), _('June'), _('July'), _('August'), _('September'), _('October'), _('November'), _('December')],
-        'shortMonths': [_('Jan'), _('Feb'), _('Mar'), _('Apr'), _('May'), _('Jun'), _('Jul'), _('Aug'), _('Sep'), _('Oct'), _('Nov'), _('Dec')],
+        'months': [_('January'), _('February'), _('March'), _('April'), _('May'), _('June'), _('July'), _('August'),
+                   _('September'), _('October'), _('November'), _('December')],
+        'shortMonths': [_('Jan'), _('Feb'), _('Mar'), _('Apr'), _('May'), _('Jun'), _('Jul'), _('Aug'), _('Sep'),
+                        _('Oct'), _('Nov'), _('Dec')],
         'printButtonTitle': _("Print the chart"),
         'resetZoom': _('Reset zoom'),
         'resetZoomTitle': _('Reset zoom level 1:1'),

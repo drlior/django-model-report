@@ -2,7 +2,6 @@
 from django import forms
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
-from django.utils.encoding import force_unicode
 
 
 class RangeWidget(forms.MultiWidget):
@@ -27,12 +26,12 @@ class RangeField(forms.MultiValueField):
     Field to filter date values by range.
     """
     default_error_messages = {
-        'invalid_start': _(u'Enter a valid start value.'),
-        'invalid_end': _(u'Enter a valid end value.'),
+        'invalid_start': _('Enter a valid start value.'),
+        'invalid_end': _('Enter a valid end value.'),
     }
 
     def __init__(self, field_class, widget=forms.TextInput, *args, **kwargs):
-        if not 'initial' in kwargs:
+        if 'initial' not in kwargs:
             kwargs['initial'] = ['', '']
 
         fields = (field_class(), field_class())
@@ -42,7 +41,7 @@ class RangeField(forms.MultiValueField):
                 widget=RangeWidget(widget),
                 *args, **kwargs
                 )
-        self.label = force_unicode(field_class().label)
+        self.label = field_class().label
 
     def compress(self, data_list):
         if data_list:

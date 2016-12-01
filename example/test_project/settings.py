@@ -2,6 +2,7 @@
 from os.path import abspath, dirname, basename, join
 import sys
 
+ALLOWED_HOSTS = ["0.0.0.0","localhost",]
 PROJECT_ABSOLUTE_DIR = dirname(abspath(__file__))
 PROJECT_NAME = basename(PROJECT_ABSOLUTE_DIR)
 
@@ -128,7 +129,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'model_report',
-    'app',
+    # 'app',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -160,9 +161,3 @@ except Exception:
     pass
 
 
-try:
-    # TO RUN LOCAL RUN: pip uninstall dj-database-url
-    import dj_database_url
-    DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
-except Exception:
-    pass
