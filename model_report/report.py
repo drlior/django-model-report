@@ -262,7 +262,8 @@ class ReportAdmin(object):
                     if field in self.extra_fields:
                         model_field = self.extra_fields[field]
                     elif not 'self.' in field:
-                        model_field = self.model._meta.get_field_by_name(field)[0]
+                        #model_field = self.model._meta.get_field_by_name(field)[0]
+                        model_field = self.model._meta.get_field(field)
                     else:
                         get_attr = lambda s: getattr(s, field.split(".")[1])
                         get_attr.verbose_name = field
@@ -513,8 +514,9 @@ class ReportAdmin(object):
 
         if isinstance(context_or_response, HttpResponse):
             return context_or_response
-        return render_to_response(self.template_name, context_or_response,
-                                  context_instance=RequestContext(request))
+        #return render_to_response(self.template_name, context_or_response,
+        #                          context_instance=RequestContext(request))
+        return render_to_response(self.template_name, context_or_response)
 
     def has_report_totals(self):
         return not (not self.report_totals)
@@ -858,7 +860,10 @@ class ReportAdmin(object):
         else:
             groupby_fn = lambda x: None
 
-        qs_list.sort(key=groupby_fn)
+        try:
+            qs_list.sort(key=groupby_fn)
+        except TypeError:
+            pass
         g = groupby(qs_list, key=groupby_fn)
 
         row_report_totals = self.get_empty_row_asdict(self.report_totals, [])
@@ -882,6 +887,7 @@ class ReportAdmin(object):
                         if ffields[index] in self.override_field_formats:
                             value.format = self.override_field_formats[ffields[index]]
                         row.append(value)
+
                 else:
                     for index, column in enumerate(ffields):
                         value = self.get_field_value(resource, column)
