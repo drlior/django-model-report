@@ -2,7 +2,6 @@
 import html
 
 from django.utils.translation import ugettext_lazy as _
-from past.builtins import unicode
 
 from model_report.highcharts.base import true, false, null, DictObject
 from model_report.highcharts.options import get_highchart_data
@@ -15,10 +14,7 @@ def is_numeric(value):
         return False
     return True
 
-try:
-    from BeautifulSoup import BeautifulStoneSoup
-except ImportError:
-    from bs4 import BeautifulStoneSoup
+from bs4 import BeautifulStoneSoup
 
 
 
@@ -26,7 +22,7 @@ def HTMLEntitiesToUnicode(text):
     """
     Converts HTML entities to unicode.  For example '&amp;' becomes '&'.
     """
-    text = unicode(BeautifulStoneSoup(text, convertEntities=BeautifulStoneSoup.ALL_ENTITIES))
+    text = BeautifulStoneSoup(text, convertEntities=BeautifulStoneSoup.ALL_ENTITIES)
     return text
 
 
@@ -226,7 +222,7 @@ class HighchartRender(object):
         except ImportError:
             import json as simplejson
 
-        json = unicode(self.model)
+        json = self.model
         json = simplejson.dumps(json)[1:-1]
         json = json.replace("'true'", 'true')
         json = json.replace("'false'", 'false')

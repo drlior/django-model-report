@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
 
-from past.builtins import unicode
 from xlwt import Workbook, easyxf
 from itertools import groupby
 
@@ -278,7 +277,7 @@ class ReportAdmin(object):
         if parent_report:
             self.related_inline_field = [f for f, x in self.model._meta.get_fields_with_model() if f.rel and hasattr(f.rel, 'to') and f.rel.to is self.parent_report.model][0]
             self.related_inline_accessor = self.related_inline_field.related.get_accessor_name()
-            self.related_fields = ["%s__%s" % (get_model_name(pfield.model), attname) for pfield, attname in self.parent_report.model_fields if not isinstance(pfield, (str, unicode)) and  pfield.model == self.related_inline_field.rel.to]
+            self.related_fields = ["%s__%s" % (get_model_name(pfield.model), attname) for pfield, attname in self.parent_report.model_fields if not isinstance(pfield, (str)) and  pfield.model == self.related_inline_field.rel.to]
             self.related_inline_filters = []
 
             for pfield, pattname in self.parent_report.model_fields:
@@ -297,8 +296,8 @@ class ReportAdmin(object):
         except:
             model_field = None
         value = self.get_grouper_text(value, groupby_field, model_field)
-        if value is None or unicode(value) == "None":
-            if groupby_field is None or unicode(groupby_field) == u'None':
+        if value is None or value == "None":
+            if groupby_field is None or groupby_field == u'None':
                 value = _('Results')
             else:
                 value = _('Nothing')
@@ -311,7 +310,7 @@ class ReportAdmin(object):
             model_field = None
 
         value = self.get_value_text(value, index, model_field)
-        if value is None or unicode(value) == 'None':
+        if value is None or value == 'None':
             value = ''
         if value == [None]:
             value = []
@@ -319,7 +318,7 @@ class ReportAdmin(object):
 
     def get_grouper_text(self, value, field, model_field):
         try:
-            if not isinstance(model_field, (str, unicode)):
+            if not isinstance(model_field, (str)):
                 obj = model_field.model(**{field: value})
                 if hasattr(obj, 'get_%s_display' % field):
                     value = getattr(obj, 'get_%s_display' % field)()
@@ -333,7 +332,7 @@ class ReportAdmin(object):
 
     def get_value_text(self, value, index, model_field):
         try:
-            if not isinstance(model_field, (str, unicode)):
+            if not isinstance(model_field, str):
                 obj = model_field.model(**{model_field.name: value})
                 if hasattr(obj, 'get_%s_display' % model_field.name):
                     return getattr(obj, 'get_%s_display' % model_field.name)()
@@ -675,7 +674,7 @@ class ReportAdmin(object):
         # [ 1, model_field] ]
         for index, model_field in dot_model_fields:
             model_ids = set([row[index] for row in resources])
-            if isinstance(model_field, (unicode, str)) and 'self.' in model_field:
+            if isinstance(model_field, (str)) and 'self.' in model_field:
                 model_qs = self.model.objects.filter(pk__in=model_ids)
             else:
                 model_qs = model_field.rel.to.objects.filter(pk__in=model_ids)

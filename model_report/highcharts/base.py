@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext_lazy
-from past.builtins import unicode
 
 true = 'true'
 false = 'false'
@@ -25,7 +24,7 @@ class CollectionObject(object):
         self._dicts.append(obj)
 
     def __repr__(self):
-        return unicode(self._dicts)
+        return self._dicts
 
 
 class DictObject:
@@ -50,11 +49,11 @@ class DictObject:
                     v = str(v).lower()
                 if v == ('null',):
                     v = 'null'
-                if unicode(v):
+                if v:
                     data[k] = v
         if not data:
             data = ""
-        return unicode(data)
+        return data
 
     def create(self, **defaults):
         obj = DictObject(**self.__dict__)

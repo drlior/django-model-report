@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from past.builtins import unicode
 from xlwt import Workbook, easyxf
 
 from django.http import HttpResponse
@@ -72,7 +71,7 @@ class ExcelExporter(Exporter):
                     row_index += 1
                 elif row.is_caption:
                     for index, x in enumerate(row):
-                        if not isinstance(x, (unicode, str)):
+                        if not isinstance(x, (str)):
                             sheet1.write(row_index, index, x.text(), stylebold)
                         else:
                             sheet1.write(row_index, index, x, stylebold)

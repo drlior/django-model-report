@@ -1,8 +1,7 @@
-past
 django
 reportlab
 html5lib
-BeautifulSoup
+bs4
 psycopg2
 dj-database-url
 xlwt

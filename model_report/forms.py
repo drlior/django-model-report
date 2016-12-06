@@ -2,7 +2,6 @@
 from django import forms
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
-from past.builtins import unicode
 
 from model_report.widgets import RangeField
 
@@ -73,7 +72,7 @@ class GroupByForm(forms.Form):
     def get_cleaned_data(self):
         cleaned_data = getattr(self, 'cleaned_data', {})
         if 'groupby' in cleaned_data:
-            if unicode(cleaned_data['groupby']) == u'None':
+            if cleaned_data['groupby'] == u'None':
                 cleaned_data['groupby'] = None
         return cleaned_data
 
@@ -105,7 +104,7 @@ class FilterForm(forms.BaseForm):
             elif hasattr(self.fields[k], 'as_boolean'):
                 if v:
                     filter_kwargs.pop(k)
-                    filter_kwargs[k] = (unicode(v) == u'True')
+                    filter_kwargs[k] = (v == u'True')
         return filter_kwargs
 
     def get_cleaned_data(self):
